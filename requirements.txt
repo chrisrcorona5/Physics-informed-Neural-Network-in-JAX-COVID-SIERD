@@ -1,0 +1,6 @@
+jax==0.7.2
+optax==0.2.8
+diffrax==0.7.2
+pandas>=2.2.2
+numpy>=2.0.2
+matplotlib>=3.10.0
