@@ -15,17 +15,17 @@ $$\mathbf{y}(t) = \left[ S(t),\ E(t),\ I(t),\ R(t),\ D(t),\ C(t) \right]^{\top}$
  
 The system is governed by the following system of non-linear ordinary differential equations (ODEs):
  
-$$\frac{dS(t)}{dt} = -\frac{\beta}{N} S(t)\, I(t)$$
+$$\frac{dS(t)}{dt} = -\frac{\beta}{N} S(t) I(t)$$
  
-$$\frac{dE(t)}{dt} = \frac{\beta}{N} S(t)\, I(t) - \sigma E(t)$$
+$$\frac{dE(t)}{dt} = \frac{\beta}{N} S(t) I(t) - \sigma E(t)$$
  
 $$\frac{dI(t)}{dt} = \sigma E(t) - \gamma I(t)$$
  
-$$\frac{dR(t)}{dt} = (1 - \alpha)\, \gamma I(t)$$
+$$\frac{dR(t)}{dt} = (1 - \alpha) \gamma I(t)$$
  
-$$\frac{dD(t)}{dt} = \alpha\, \gamma I(t)$$
+$$\frac{dD(t)}{dt} = \alpha \gamma I(t)$$
  
-$$\frac{dC(t)}{dt} = \lambda\, \gamma I(t)$$
+$$\frac{dC(t)}{dt} = \lambda \gamma I(t)$$
  
 ### Parameter Definitions
  
@@ -48,17 +48,17 @@ At the core of the solver is a **Multilayer Perceptron (MLP)** that acts as a un
  
 The neural network learns the mapping $f : \mathbb{R}^6 \to \mathbb{R}^6$, parameterized by weights and biases $\theta$. For a hidden layer $l$, the operation is:
  
-$$\mathbf{h}_l = \tanh\!\left( W_l\, \mathbf{h}_{l-1} + \mathbf{b}_l \right)$$
+$$\mathbf{h}_l = \tanh \left( W_l  \mathbf{h}_{l-1} + \mathbf{b}_l \right)$$
  
 The final output is a linear transformation:
  
-$$\hat{\mathbf{y}}' = W_L\, \mathbf{h}_{L-1} + \mathbf{b}_L$$
+$$\hat{\mathbf{y}}' = W_L  \mathbf{h}_{L-1} + \mathbf{b}_L$$
  
 ### The Neural ODE Formulation
  
 In a Neural ODE, the network does not predict the state $\mathbf{y}(t)$ directly. Instead, it predicts the **derivative** (the rate of change) of the system at any given point:
  
-$$\frac{d\mathbf{y}}{dt} = \mathrm{NN}\!\left(\mathbf{y}(t);\, \theta\right)$$
+$$\frac{d\mathbf{y}}{dt} = \mathrm{NN} \left(\mathbf{y}(t); \theta\right)$$
  
 This allows the model to learn the **underlying dynamics** of the epidemic rather than just fitting a static curve.
  
@@ -68,13 +68,13 @@ This allows the model to learn the **underlying dynamics** of the epidemic rathe
  
 To evolve the system through time, we use a **4th-Order Runge-Kutta (RK4)** integration scheme. RK4 provides a much higher degree of accuracy than simple Euler methods by sampling the slope at four distinct points within each time step $\Delta t$:
  
-$$k_1 = f\!\left(\mathbf{y}_n,\, \theta\right)$$
+$$k_1 = f \left(\mathbf{y}_n, \theta\right)$$
  
-$$k_2 = f\!\left(\mathbf{y}_n + \frac{\Delta t}{2}\, k_1,\, \theta\right)$$
+$$k_2 = f \left(\mathbf{y}_n + \frac{\Delta t}{2} k_1, \theta\right)$$
  
-$$k_3 = f\!\left(\mathbf{y}_n + \frac{\Delta t}{2}\, k_2,\, \theta\right)$$
+$$k_3 = f \left(\mathbf{y}_n + \frac{\Delta t}{2} k_2, \theta\right)$$
  
-$$k_4 = f\!\left(\mathbf{y}_n + \Delta t\, k_3,\, \theta\right)$$
+$$k_4 = f \left(\mathbf{y}_n + \Delta t k_3, \theta\right)$$
  
 **The Update Rule:**
  
@@ -88,9 +88,9 @@ $$\mathbf{y}_{n+1} = \mathbf{y}_n + \frac{\Delta t}{6}\left( k_1 + 2k_2 + 2k_3 +
  
 The model is optimized using the **Adam optimizer** with an exponential learning rate decay. The loss function is a Mean Squared Error (MSE) computed over a sliding window of the time series to capture temporal dependencies:
  
-$$\mathcal{L}(\theta) = \frac{1}{T} \sum_{t=1}^{T} \left\| \mathbf{y}_{\text{true}}(t) - \mathbf{y}_{\text{pred}}(t;\, \theta) \right\|^2$$
+$$\mathcal{L}(\theta) = \frac{1}{T} \sum_{t=1}^{T} \left\| \mathbf{y}_{\text{true}}(t) - \mathbf{y}_{\text{pred}}(t; \theta) \right\|^2$$
  
-This project addresses the **identification problem**: because many parameters can produce similar short-run fits but vastly different long-run forecasts, we use data-driven regularization to stabilize the estimation of $\beta$ and the basic reproduction number $\mathcal{R}_0$.
+This project addresses the **identification problem**: because many parameters can produce similar short-run fits but vastly different long-run forecasts, we use data-driven regularization to stabilize the estimation of $\beta$.
  
 
  
