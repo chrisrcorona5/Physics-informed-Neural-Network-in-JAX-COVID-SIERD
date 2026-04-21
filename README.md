@@ -1,7 +1,7 @@
 # Physics-informed-Neural-Network-in-JAX-COVID-SIERD
 A JAX-based Physics-Informed Neural Network (PINN) designed to model COVID-19 dynamics. It utilizes a custom SEIRD compartmental model, incorporating real-world US data to estimate time-varying parameters like transmission rates. Features RK4 numerical integration and neural fields to predict disease trajectory accurately.
 
-![Neural ODE](https://www.researchgate.net/publication/392761385/figure/fig2/AS:11431281504117362@1750179649187/Architecture-of-the-Neural-ODE-for-model-order-reduction.png)
+![Neural ODE](images/Neural-ODE.png)
 
 Unlike standard "black-box" models, this architecture embeds the **SEIRD** (Susceptible-Exposed-Infectious-Recovered-Dead) differential equations directly into the learning process, ensuring that the predicted trajectories remain physically and biologically consistent with the laws of epidemic growth.
  
