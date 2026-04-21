@@ -22,9 +22,12 @@ def data_driven_loss(params, t_data, true_data, window_size=3):
         total_loss += mse_loss(y_next_true, y_pred)
     return total_loss / window_size
 
-@jax.jit
-def update(params, opt_state, t_data, true_data, optimizer):
-    loss, grads = jax.value_and_grad(data_driven_loss)(params, t_data, true_data)
-    updates, opt_state = optimizer.update(grads, opt_state)
-    params = optax.apply_updates(params, updates)
-    return params, opt_state, loss
+# Fix newer JAX error for optimizer not being an array but rather python functions
+def make_update_fn(optimizer):
+    @jax.jit
+    def update(params, opt_state, t_data, true_data):
+        loss, grads = jax.value_and_grad(data_driven_loss)(params, t_data, true_data)
+        updates, new_opt_state = optimizer.update(grads, opt_state)
+        new_params = optax.apply_updates(params, updates)
+        return new_params, new_opt_state, loss
+    return update
